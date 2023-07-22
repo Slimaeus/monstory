@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monstory/screens/game_play.dart';
+import 'package:monstory/manager/route_manager.dart';
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
@@ -15,13 +15,14 @@ class MainMenu extends StatelessWidget {
           ),
           ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const GamePlay()));
+                Navigator.of(context)
+                    .pushReplacementNamed(RouteManager.gamePlay);
               },
               child: const Text('Play')),
           ElevatedButton(
               onPressed: () {
-                // TODO: Navigate to options
+                Navigator.of(context)
+                    .pushReplacementNamed(RouteManager.options);
               },
               child: const Text('Options'))
         ]),
