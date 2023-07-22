@@ -4,6 +4,10 @@ import 'package:flame/components.dart';
 import 'package:monstory/game/monstory_game.dart';
 
 class JellyFish extends SpriteAnimationComponent with HasGameRef<MonstoryGame> {
+  Vector2 _moveDirection = Vector2.zero();
+
+  double _speed = 300;
+
   JellyFish({required super.position})
       : super(size: Vector2.all(64), anchor: Anchor.center);
 
@@ -17,5 +21,16 @@ class JellyFish extends SpriteAnimationComponent with HasGameRef<MonstoryGame> {
         stepTime: 0.12,
       ),
     );
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    position += _moveDirection.normalized() * _speed * dt;
+  }
+
+  void setMoveDirection(Vector2 newMoveDirection) {
+    _moveDirection = newMoveDirection;
   }
 }
