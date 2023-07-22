@@ -25,11 +25,11 @@ class MonstoryGame extends FlameGame {
     cameraComponent.viewfinder.anchor = Anchor.topLeft;
     addAll([cameraComponent, world]);
 
-    _mountain = Mountain();
+    _mountain = Mountain()..size = size;
 
     world.add(_mountain);
 
-    _turtle = Turtle(position: Vector2(128, canvasSize.y - 500));
+    _turtle = Turtle(position: Vector2(128, canvasSize.y - 500), speed: 1000);
     _jellyFish = JellyFish(position: Vector2(128, canvasSize.y - 300));
 
     world.add(_turtle);
