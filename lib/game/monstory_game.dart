@@ -8,7 +8,7 @@ import 'package:monstory/actors/jellyfish.dart';
 import 'package:monstory/actors/turtle.dart';
 import 'package:monstory/backgrounds/mountain.dart';
 
-class MonstoryGame extends FlameGame with PanDetector {
+class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
   Offset? _pointerStartPosition;
   Offset? _pointerCurrentPosition;
   final double _joystickRadius = 40;
@@ -16,6 +16,7 @@ class MonstoryGame extends FlameGame with PanDetector {
 
   late Turtle _turtle;
   late JellyFish _jellyFish;
+  late JellyFish _jellyFishFake;
   late Mountain _mountain;
 
   final World world = World();
@@ -36,9 +37,11 @@ class MonstoryGame extends FlameGame with PanDetector {
 
     _turtle = Turtle(position: Vector2(128, canvasSize.y - 500), speed: 1000);
     _jellyFish = JellyFish(position: Vector2(128, canvasSize.y - 300));
+    _jellyFishFake = JellyFish(position: Vector2(128, canvasSize.y - 300));
 
     world.add(_turtle);
     world.add(_jellyFish);
+    world.add(_jellyFishFake);
   }
 
   @override
