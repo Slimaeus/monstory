@@ -23,6 +23,7 @@ class Turtle extends SpriteAnimationComponent with HasGameRef<MonstoryGame> {
 
   @override
   void update(double dt) {
+    super.update(dt);
     final screenSize = gameRef.size;
     if (movingOnXAxis) {
       // Move on the X-axis
