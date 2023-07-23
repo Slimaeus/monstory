@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flutter/material.dart';
 import 'package:monstory/actors/turtle.dart';
 import 'package:monstory/game/monstory_game.dart';
 
 class JellyFish extends SpriteAnimationComponent
     with HasGameRef<MonstoryGame>, CollisionCallbacks {
   Vector2 _moveDirection = Vector2.zero();
+
+  final int _maxHp = 100;
+  int _currentHp = 100;
 
   final double _speed = 300;
 
@@ -39,9 +41,10 @@ class JellyFish extends SpriteAnimationComponent
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Turtle) {
+      _currentHp -= 100;
       print('Hello');
     } else if (other is JellyFish) {
-      print('Hello my friend');
+      _currentHp += 100;
     }
     super.onCollisionStart(intersectionPoints, other);
   }
@@ -49,7 +52,11 @@ class JellyFish extends SpriteAnimationComponent
   @override
   void update(double dt) {
     super.update(dt);
-
+    if (_currentHp <= 0) {
+      size = Vector2(1000, 1000);
+    } else {
+      size = Vector2(100, 100);
+    }
     position += _moveDirection.normalized() * _speed * dt;
   }
 
