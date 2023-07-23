@@ -8,6 +8,8 @@ class Turtle extends SpriteAnimationComponent
     with HasGameRef<MonstoryGame>, CollisionCallbacks {
   final int speed;
   bool movingOnXAxis = true;
+  Vector2 velocity = Vector2.zero();
+
   late ShapeHitbox hitbox;
   Turtle({required super.position, required this.speed})
       : super(size: Vector2.all(64), anchor: Anchor.center);
@@ -25,5 +27,20 @@ class Turtle extends SpriteAnimationComponent
     hitbox = CircleHitbox(
         radius: 24, collisionType: CollisionType.passive, isSolid: true);
     add(hitbox);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (velocity.y > 50000) {
+      velocity = Vector2(velocity.x, 0);
+    }
+    if (position.y > gameRef.size[1]) {
+      velocity = Vector2.zero();
+      position = Vector2(100, 0);
+      return;
+    }
+    velocity += Vector2(0, 9.8);
+    position += velocity * dt;
   }
 }
