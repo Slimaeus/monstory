@@ -17,7 +17,7 @@ class Turtle extends SpriteAnimationComponent
   @override
   FutureOr<void> onLoad() {
     animation = SpriteAnimation.fromFrameData(
-      game.images.fromCache('idle_turtle.png'),
+      game.images.fromCache('turtle/idle_turtle.png'),
       SpriteAnimationData.sequenced(
         amount: 4,
         textureSize: Vector2.all(48),

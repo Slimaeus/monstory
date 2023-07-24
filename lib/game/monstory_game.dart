@@ -24,8 +24,15 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
 
   @override
   Future<void> onLoad() async {
-    await images
-        .loadAll(['background.png', 'idle_turtle.png', 'idle_jellyfish.png']);
+    await images.loadAll([
+      'background.png',
+      'turtle/idle_turtle.png',
+      'jellyfish/idle_jellyfish.png',
+      'jellyfish/walk_jellyfish.png',
+      'jellyfish/attack_jellyfish.png',
+      'jellyfish/hurt_jellyfish.png',
+      'jellyfish/death_jellyfish.png',
+    ]);
 
     cameraComponent = CameraComponent(world: world);
     cameraComponent.viewfinder.anchor = Anchor.topLeft;
