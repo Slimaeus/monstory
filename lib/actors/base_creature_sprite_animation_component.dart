@@ -5,34 +5,31 @@ import 'package:flame/components.dart';
 import 'package:monstory/actors/turtle.dart';
 import 'package:monstory/enums/creature_state.dart';
 import 'package:monstory/game/monstory_game.dart';
+import 'package:monstory/models/base_creature.dart';
 
+import 'jellyfish.dart';
 
-class JellyFish extends SpriteAnimationComponent
+abstract class BaseCreatureSpriteAnimationComponent<T extends BaseCreature>
+    extends SpriteAnimationComponent
     with HasGameRef<MonstoryGame>, CollisionCallbacks {
-  Vector2 _moveDirection = Vector2.zero();
-
-  final int _maxHp = 100;
-  int _currentHp = 100;
-
-  final double _speed = 300;
-
+  T details;
   late SpriteAnimation _idleAnimation;
   late SpriteAnimation _walkAnimation;
   late SpriteAnimation _attackAnimation;
   late SpriteAnimation _hurtAnimation;
   late SpriteAnimation _deathAnimation;
 
+  late ShapeHitbox hitbox;
   CreatureState state = CreatureState.idle;
 
-  late ShapeHitbox hitbox;
-
-  JellyFish({required super.position})
+  BaseCreatureSpriteAnimationComponent(
+      {required this.details, required super.position})
       : super(size: Vector2.all(64), anchor: Anchor.center);
 
   @override
   FutureOr<void> onLoad() {
     _idleAnimation = SpriteAnimation.fromFrameData(
-      game.images.fromCache('jellyfish/idle_jellyfish.png'),
+      game.images.fromCache('${details.name}/idle_${details.name}.png'),
       SpriteAnimationData.sequenced(
         amount: 4,
         textureSize: Vector2.all(48),
@@ -41,7 +38,7 @@ class JellyFish extends SpriteAnimationComponent
     );
 
     _walkAnimation = SpriteAnimation.fromFrameData(
-      game.images.fromCache('jellyfish/walk_jellyfish.png'),
+      game.images.fromCache('${details.name}/walk_${details.name}.png'),
       SpriteAnimationData.sequenced(
         amount: 4,
         textureSize: Vector2.all(48),
@@ -50,7 +47,7 @@ class JellyFish extends SpriteAnimationComponent
     );
 
     _attackAnimation = SpriteAnimation.fromFrameData(
-      game.images.fromCache('jellyfish/attack_jellyfish.png'),
+      game.images.fromCache('${details.name}/attack_${details.name}.png'),
       SpriteAnimationData.sequenced(
         amount: 4,
         textureSize: Vector2.all(48),
@@ -59,7 +56,7 @@ class JellyFish extends SpriteAnimationComponent
     );
 
     _hurtAnimation = SpriteAnimation.fromFrameData(
-      game.images.fromCache('jellyfish/hurt_jellyfish.png'),
+      game.images.fromCache('${details.name}/hurt_${details.name}.png'),
       SpriteAnimationData.sequenced(
         amount: 2,
         textureSize: Vector2.all(48),
@@ -68,7 +65,7 @@ class JellyFish extends SpriteAnimationComponent
     );
 
     _deathAnimation = SpriteAnimation.fromFrameData(
-      game.images.fromCache('jellyfish/death_jellyfish.png'),
+      game.images.fromCache('${details.name}/death_${details.name}.png'),
       SpriteAnimationData.sequenced(
         amount: 6,
         textureSize: Vector2.all(48),
@@ -83,62 +80,7 @@ class JellyFish extends SpriteAnimationComponent
         isSolid: true,
         anchor: Anchor.topLeft);
     add(hitbox);
-  }
-
-  @override
-  void onCollisionStart(
-      Set<Vector2> intersectionPoints, PositionComponent other) {
-    if (other is Turtle) {
-      // animation = _hurtAnimation;
-      if (_currentHp > 0) {
-        int damage = 10;
-        if (_currentHp > damage) {
-          _currentHp -= damage;
-          updateAnimation(CreatureState.hurt);
-          Future.delayed(const Duration(seconds: 1)).then((value) => {
-                if (state == CreatureState.hurt)
-                  updateAnimation(CreatureState.idle)
-              });
-        } else {
-          // animation = _deathAnimation;
-          updateAnimation(CreatureState.death);
-        }
-      }
-    } else if (other is JellyFish) {
-      _currentHp = 100;
-      // animation = _idleAnimation;
-      updateAnimation(CreatureState.idle);
-    }
-    super.onCollisionStart(intersectionPoints, other);
-  }
-
-  @override
-  void onCollisionEnd(PositionComponent other) {
-    if (state == CreatureState.death) return;
-    if (other is Turtle) {
-      // animation = _idleAnimation;
-      // updateAnimation(CreatureState.idle);
-    } else if (other is JellyFish) {}
-    super.onCollisionEnd(other);
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-    if (state == CreatureState.death) return;
-    if (_moveDirection.x != 0 || _moveDirection.y != 0) {
-      // animation = _walkAnimation;
-      updateAnimation(CreatureState.walk);
-    }
-
-    position += _moveDirection.normalized() * _speed * dt;
-  }
-
-  void setMoveDirection(Vector2 newMoveDirection) {
-    if (newMoveDirection == Vector2.zero()) {
-      updateAnimation(CreatureState.idle);
-    }
-    _moveDirection = newMoveDirection;
+    return super.onLoad();
   }
 
   void updateAnimation(CreatureState newState) {

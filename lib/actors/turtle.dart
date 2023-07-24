@@ -1,46 +1,52 @@
-import 'dart:async';
-
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:monstory/game/monstory_game.dart';
+import 'package:monstory/actors/base_creature_sprite_animation_component.dart';
+import 'package:monstory/enums/creature_state.dart';
+import 'package:monstory/models/base_creature.dart';
+import 'package:monstory/models/base_creature_stats.dart';
 
-class Turtle extends SpriteAnimationComponent
-    with HasGameRef<MonstoryGame>, CollisionCallbacks {
-  final int speed;
-  bool movingOnXAxis = true;
-  Vector2 velocity = Vector2.zero();
+import 'jellyfish.dart';
 
-  late ShapeHitbox hitbox;
-  Turtle({required super.position, required this.speed})
-      : super(size: Vector2.all(64), anchor: Anchor.center);
+class TurtleCreatureStats extends BaseCreatureStats {
+  TurtleCreatureStats()
+      : super(baseAttack: 1, baseDefence: 1, baseMaxHp: 100, baseSpeed: 1);
+}
+
+class TurtleCreature extends BaseCreature {
+  TurtleCreature() : super(name: 'turtle', stats: TurtleCreatureStats());
+}
+
+class Turtle extends BaseCreatureSpriteAnimationComponent<TurtleCreature> {
+  Turtle({required super.position}) : super(details: TurtleCreature());
 
   @override
-  FutureOr<void> onLoad() {
-    animation = SpriteAnimation.fromFrameData(
-      game.images.fromCache('turtle/idle_turtle.png'),
-      SpriteAnimationData.sequenced(
-        amount: 4,
-        textureSize: Vector2.all(48),
-        stepTime: 0.12,
-      ),
-    );
-    hitbox = CircleHitbox(
-        radius: 24, collisionType: CollisionType.passive, isSolid: true);
-    add(hitbox);
+  void onCollisionStart(
+      Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (other is JellyFish) {
+      if (details.hp > 0) {
+        int damage = 10;
+        if (details.hp > damage) {
+          details.hp -= damage;
+          updateAnimation(CreatureState.hurt);
+          Future.delayed(const Duration(seconds: 1)).then((value) => {
+                if (state == CreatureState.hurt)
+                  updateAnimation(CreatureState.idle)
+              });
+        } else {
+          updateAnimation(CreatureState.death);
+        }
+      }
+    } else if (other is Turtle) {
+      details.hp = 100;
+      updateAnimation(CreatureState.idle);
+    }
+    super.onCollisionStart(intersectionPoints, other);
   }
 
   @override
-  void update(double dt) {
-    super.update(dt);
-    if (velocity.y > 50000) {
-      velocity = Vector2(velocity.x, 0);
-    }
-    if (position.y > gameRef.size[1]) {
-      velocity = Vector2.zero();
-      position = Vector2(100, 0);
-      return;
-    }
-    velocity += Vector2(0, 9.8);
-    position += velocity * dt;
+  void onCollisionEnd(PositionComponent other) {
+    if (state == CreatureState.death) return;
+    if (other is Turtle) {
+    } else if (other is JellyFish) {}
+    super.onCollisionEnd(other);
   }
 }

@@ -27,6 +27,10 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
     await images.loadAll([
       'background.png',
       'turtle/idle_turtle.png',
+      'turtle/walk_turtle.png',
+      'turtle/attack_turtle.png',
+      'turtle/hurt_turtle.png',
+      'turtle/death_turtle.png',
       'jellyfish/idle_jellyfish.png',
       'jellyfish/walk_jellyfish.png',
       'jellyfish/attack_jellyfish.png',
@@ -42,7 +46,7 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
 
     world.add(_mountain);
 
-    _turtle = Turtle(position: Vector2(128, canvasSize.y - 500), speed: 1000);
+    _turtle = Turtle(position: Vector2(128, canvasSize.y - 500));
     _jellyFish = JellyFish(position: Vector2(128, canvasSize.y - 300));
     _jellyFishFake = JellyFish(position: Vector2(128, canvasSize.y - 300));
 
