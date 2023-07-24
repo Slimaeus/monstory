@@ -135,6 +135,9 @@ class JellyFish extends SpriteAnimationComponent
   }
 
   void setMoveDirection(Vector2 newMoveDirection) {
+    if (newMoveDirection == Vector2.zero()) {
+      updateAnimation(CreatureState.idle);
+    }
     _moveDirection = newMoveDirection;
   }
 
