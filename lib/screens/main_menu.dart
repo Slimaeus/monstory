@@ -1,5 +1,6 @@
 import 'package:flame_splash_screen/flame_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:monstory/manager/route_manager.dart';
 
 class MainMenu extends StatefulWidget {
@@ -41,14 +42,12 @@ class _MainMenuState extends State<MainMenu> {
           ),
           ElevatedButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pushReplacementNamed(RouteManager.gamePlay);
+                context.go(RouteManager.gamePlay);
               },
               child: const Text('Play')),
           ElevatedButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pushReplacementNamed(RouteManager.options);
+                context.go(RouteManager.options);
               },
               child: const Text('Options'))
         ]),
