@@ -5,6 +5,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:monstory/actors/jellyfish.dart';
+import 'package:monstory/actors/shark.dart';
 import 'package:monstory/actors/turtle.dart';
 import 'package:monstory/backgrounds/mountain.dart';
 
@@ -14,9 +15,10 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
   final double _joystickRadius = 40;
   MonstoryGame();
 
-  late Turtle _turtle;
   late JellyFish _jellyFish;
   late JellyFish _jellyFishFake;
+  late Turtle _turtle;
+  late Shark _shark;
   late Mountain _mountain;
 
   final World world = World();
@@ -26,16 +28,21 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
   Future<void> onLoad() async {
     await images.loadAll([
       'background.png',
-      'turtle/idle_turtle.png',
-      'turtle/walk_turtle.png',
-      'turtle/attack_turtle.png',
-      'turtle/hurt_turtle.png',
-      'turtle/death_turtle.png',
       'jellyfish/idle_jellyfish.png',
       'jellyfish/walk_jellyfish.png',
       'jellyfish/attack_jellyfish.png',
       'jellyfish/hurt_jellyfish.png',
       'jellyfish/death_jellyfish.png',
+      'turtle/idle_turtle.png',
+      'turtle/walk_turtle.png',
+      'turtle/attack_turtle.png',
+      'turtle/hurt_turtle.png',
+      'turtle/death_turtle.png',
+      'shark/idle_shark.png',
+      'shark/walk_shark.png',
+      'shark/attack_shark.png',
+      'shark/hurt_shark.png',
+      'shark/death_shark.png',
     ]);
 
     cameraComponent = CameraComponent(world: world);
@@ -46,13 +53,15 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
 
     world.add(_mountain);
 
-    _turtle = Turtle(position: Vector2(128, canvasSize.y - 500));
-    _jellyFish = JellyFish(position: Vector2(128, canvasSize.y - 300));
+    _jellyFish = JellyFish(position: Vector2(64, canvasSize.y - 300));
     _jellyFishFake = JellyFish(position: Vector2(128, canvasSize.y - 300));
+    _turtle = Turtle(position: Vector2(192, canvasSize.y - 300));
+    _shark = Shark(position: Vector2(256, canvasSize.y - 300));
 
-    world.add(_turtle);
     world.add(_jellyFish);
     world.add(_jellyFishFake);
+    world.add(_turtle);
+    world.add(_shark);
   }
 
   @override

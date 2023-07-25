@@ -2,12 +2,9 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:monstory/actors/turtle.dart';
 import 'package:monstory/enums/creature_state.dart';
 import 'package:monstory/game/monstory_game.dart';
 import 'package:monstory/models/base_creature.dart';
-
-import 'jellyfish.dart';
 
 abstract class BaseCreatureSpriteAnimationComponent<T extends BaseCreature>
     extends SpriteAnimationComponent
