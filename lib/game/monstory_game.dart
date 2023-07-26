@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
 import 'package:monstory/actors/jellyfish.dart';
 import 'package:monstory/actors/shark.dart';
 import 'package:monstory/actors/turtle.dart';
 import 'package:monstory/backgrounds/mountain.dart';
 import 'package:monstory/game/hud/hud.dart';
-import 'package:monstory/manager/overlay_manager.dart';
 
 class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
   Offset? _pointerStartPosition;
@@ -28,6 +29,12 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
 
   @override
   Future<void> onLoad() async {
+    await Flame.device.fullScreen();
+    await Flame.device.setPortrait();
+
+    final level =
+        await TiledComponent.load('GreenZoneMap.tmx', Vector2.all(32));
+
     await images.loadAll([
       'background.png',
       'jellyfish/idle_jellyfish.png',
@@ -51,6 +58,8 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
     cameraComponent.viewfinder.anchor = Anchor.topLeft;
     cameraComponent.viewport.add(Hud());
 
+    cameraComponent.viewport.size = Vector2(600, 600);
+
     addAll([cameraComponent, world]);
 
     _mountain = Mountain()..size = size;
@@ -66,6 +75,8 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
     world.add(_jellyFishFake);
     world.add(_turtle);
     world.add(_shark);
+
+    add(level);
 
     // overlays.add(OverlayManager.pauseOverlay);
   }
