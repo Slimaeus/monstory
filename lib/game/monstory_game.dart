@@ -8,6 +8,8 @@ import 'package:monstory/actors/jellyfish.dart';
 import 'package:monstory/actors/shark.dart';
 import 'package:monstory/actors/turtle.dart';
 import 'package:monstory/backgrounds/mountain.dart';
+import 'package:monstory/game/hud/hud.dart';
+import 'package:monstory/manager/overlay_manager.dart';
 
 class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
   Offset? _pointerStartPosition;
@@ -47,6 +49,8 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
 
     cameraComponent = CameraComponent(world: world);
     cameraComponent.viewfinder.anchor = Anchor.topLeft;
+    cameraComponent.viewport.add(Hud());
+
     addAll([cameraComponent, world]);
 
     _mountain = Mountain()..size = size;
@@ -62,6 +66,8 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
     world.add(_jellyFishFake);
     world.add(_turtle);
     world.add(_shark);
+
+    // overlays.add(OverlayManager.pauseOverlay);
   }
 
   @override
