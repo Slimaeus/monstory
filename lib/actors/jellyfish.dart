@@ -6,12 +6,10 @@ import 'package:monstory/actors/turtle.dart';
 import 'package:monstory/enums/creature_state.dart';
 import 'package:monstory/game/monstory_game.dart';
 
-
 class JellyFish extends SpriteAnimationComponent
     with HasGameRef<MonstoryGame>, CollisionCallbacks {
   Vector2 _moveDirection = Vector2.zero();
 
-  final int _maxHp = 100;
   int _currentHp = 100;
 
   final double _speed = 300;

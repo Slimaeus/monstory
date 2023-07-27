@@ -4,7 +4,6 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
-import 'package:flame_tiled/flame_tiled.dart';
 import 'package:flutter/material.dart';
 import 'package:monstory/actors/jellyfish.dart';
 import 'package:monstory/actors/shark.dart';
@@ -90,11 +89,6 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
     _currentLevel?.removeFromParent();
     _currentLevel = Level(levelName);
     add(_currentLevel!);
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
   }
 
   @override
