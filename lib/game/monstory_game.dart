@@ -11,6 +11,7 @@ import 'package:monstory/actors/shark.dart';
 import 'package:monstory/actors/turtle.dart';
 import 'package:monstory/backgrounds/mountain.dart';
 import 'package:monstory/game/hud/hud.dart';
+import 'package:monstory/game/levels/level.dart';
 
 class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
   Offset? _pointerStartPosition;
@@ -27,13 +28,14 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
   final World world = World();
   late final CameraComponent cameraComponent;
 
+  Level? _currentLevel;
+  int _currentMapIndex = 0;
+  final List<String> _levelResources = ['GreenZoneMap.tmx', 'MarketMap.tmx'];
+
   @override
   Future<void> onLoad() async {
     await Flame.device.fullScreen();
     await Flame.device.setPortrait();
-
-    final level =
-        await TiledComponent.load('GreenZoneMap.tmx', Vector2.all(32));
 
     await images.loadAll([
       'background.png',
@@ -54,7 +56,10 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
       'shark/death_shark.png',
     ]);
 
-    cameraComponent = CameraComponent(world: world);
+    cameraComponent = CameraComponent(
+      world: world,
+      hudComponents: [Hud()],
+    );
     cameraComponent.viewfinder.anchor = Anchor.topLeft;
     cameraComponent.viewport.add(Hud());
 
@@ -66,6 +71,8 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
 
     world.add(_mountain);
 
+    loadLevel(_levelResources[_currentMapIndex]);
+
     _jellyFish = JellyFish(position: Vector2(64, canvasSize.y - 300));
     _jellyFishFake = JellyFish(position: Vector2(128, canvasSize.y - 300));
     _turtle = Turtle(position: Vector2(192, canvasSize.y - 300));
@@ -76,9 +83,18 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
     world.add(_turtle);
     world.add(_shark);
 
-    add(level);
-
     // overlays.add(OverlayManager.pauseOverlay);
+  }
+
+  void loadLevel(String levelName) {
+    _currentLevel?.removeFromParent();
+    _currentLevel = Level(levelName);
+    add(_currentLevel!);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
   }
 
   @override
@@ -107,6 +123,12 @@ class MonstoryGame extends FlameGame with PanDetector, HasCollisionDetection {
 
   @override
   void onPanStart(DragStartInfo info) {
+    if (_currentMapIndex == 0) {
+      _currentMapIndex = 1;
+    } else {
+      _currentMapIndex = 0;
+    }
+    loadLevel(_levelResources[_currentMapIndex]);
     _pointerStartPosition = info.eventPosition.global.toOffset();
     _pointerCurrentPosition = info.eventPosition.global.toOffset();
   }
